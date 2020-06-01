@@ -5,10 +5,10 @@ const fs = require('fs');
 http
 	.createServer((req, res) => {
 		const filePath = url.parse(req.url, true).pathname === '/' ? 'index' : url.parse(req.url, true).pathname;
-		fs.readFile(`./${filePath}.php`, (err, file) => {
+		fs.readFile(`./${filePath}.html`, (err, file) => {
 			if (err) {
 				res.writeHead(404, { 'Content-Type': 'text/html' });
-				return fs.readFile('./404.php', (err, file) => {
+				return fs.readFile('./404.html', (err, file) => {
 					if (err) {
 						throw err;
 					} else {
