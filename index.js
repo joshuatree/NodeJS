@@ -1,26 +1,20 @@
 const http = require('http');
-const url = require('url');
 const fs = require('fs');
+const url = require('url');
 
 http
 	.createServer((req, res) => {
-		const filePath = url.parse(req.url, true).pathname === '/' ? 'index' : url.parse(req.url, true).pathname;
-		fs.readFile(`./${filePath}.html`, (err, file) => {
+		const q = url.parse(req.url, true);
+		const file = q.pathname !== '/' ? `.${q.pathname}.html` : 'index.html';
+		console.log(q.pathname);
+		fs.readFile(file, (err, data) => {
 			if (err) {
 				res.writeHead(404, { 'Content-Type': 'text/html' });
-				return fs.readFile('./404.html', (err, file) => {
-					if (err) {
-						throw err;
-					} else {
-						res.write(file);
-						return res.end();
-					}
-				});
-			} else {
-				res.writeHead(200, { 'Content-Type': 'text/html' });
-				res.write(file);
-				return res.end();
+				return res.end(`<h1>404 Not found</h1> <a href='/'> Go back</a>`);
 			}
+			res.writeHead(200, { 'Content-type': 'text/html' });
+			res.write(data);
+			return res.end();
 		});
 	})
-	.listen(8080);
+	.listen(8000);
